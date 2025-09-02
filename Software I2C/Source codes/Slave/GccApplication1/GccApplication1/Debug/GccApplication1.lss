@@ -1,0 +1,295 @@
+
+GccApplication1.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         00000150  00000000  00000000  00000054  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .data         00000000  00800060  00800060  000001a4  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  2 .comment      00000030  00000000  00000000  000001a4  2**0
+                  CONTENTS, READONLY
+  3 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  000001d4  2**2
+                  CONTENTS, READONLY
+  4 .debug_aranges 00000048  00000000  00000000  00000210  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  5 .debug_info   0000087b  00000000  00000000  00000258  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_abbrev 0000065c  00000000  00000000  00000ad3  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_line   00000393  00000000  00000000  0000112f  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_frame  00000084  00000000  00000000  000014c4  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_str    000003b5  00000000  00000000  00001548  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_loc    0000019e  00000000  00000000  000018fd  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_ranges 00000050  00000000  00000000  00001a9b  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	0c 94 2a 00 	jmp	0x54	; 0x54 <__ctors_end>
+   4:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+   8:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+   c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  10:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  14:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  18:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  1c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  20:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  24:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  28:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  2c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  30:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  34:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  38:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  3c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  40:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  44:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  48:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  4c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  50:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+
+00000054 <__ctors_end>:
+  54:	11 24       	eor	r1, r1
+  56:	1f be       	out	0x3f, r1	; 63
+  58:	cf e5       	ldi	r28, 0x5F	; 95
+  5a:	d8 e0       	ldi	r29, 0x08	; 8
+  5c:	de bf       	out	0x3e, r29	; 62
+  5e:	cd bf       	out	0x3d, r28	; 61
+  60:	0e 94 85 00 	call	0x10a	; 0x10a <main>
+  64:	0c 94 a6 00 	jmp	0x14c	; 0x14c <_exit>
+
+00000068 <__bad_interrupt>:
+  68:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+0000006c <Slave_Initialization>:
+#define PINI2C		PINB
+
+void Slave_Initialization()
+{
+	//Set SCL and SDA as input Pulled-up high
+	DDRB &= ~((1 << SDA) | (1 << SCL)); 
+  6c:	87 b3       	in	r24, 0x17	; 23
+  6e:	8c 7f       	andi	r24, 0xFC	; 252
+  70:	87 bb       	out	0x17, r24	; 23
+	PORTB |= (1 << SDA) | (1 << SCL);    
+  72:	88 b3       	in	r24, 0x18	; 24
+  74:	83 60       	ori	r24, 0x03	; 3
+  76:	88 bb       	out	0x18, r24	; 24
+  78:	08 95       	ret
+
+0000007a <Start_Condition>:
+}
+
+uint8_t Start_Condition() 
+{
+	//Wait while SDA and SCL are both High (Idel state)
+	while ((PINB & (1 << SDA)) || !(PINB & (1 << SCL)));
+  7a:	b1 99       	sbic	0x16, 1	; 22
+  7c:	fe cf       	rjmp	.-4      	; 0x7a <Start_Condition>
+  7e:	b0 9b       	sbis	0x16, 0	; 22
+  80:	fc cf       	rjmp	.-8      	; 0x7a <Start_Condition>
+	#else
+		//round up by default
+		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
+	#endif
+
+	__builtin_avr_delay_cycles(__ticks_dc);
+  82:	8d e0       	ldi	r24, 0x0D	; 13
+  84:	8a 95       	dec	r24
+  86:	f1 f7       	brne	.-4      	; 0x84 <Start_Condition+0xa>
+  88:	00 00       	nop
+	 _delay_us(5);
+	 return 1;
+}
+  8a:	81 e0       	ldi	r24, 0x01	; 1
+  8c:	08 95       	ret
+
+0000008e <Read_Bit>:
+	
+uint8_t Read_Bit()
+{	
+	
+	//while SCL is LOW wait
+	while (!(PINB & (1 << SCL)));  
+  8e:	b0 9b       	sbis	0x16, 0	; 22
+  90:	fe cf       	rjmp	.-4      	; 0x8e <Read_Bit>
+  92:	82 e0       	ldi	r24, 0x02	; 2
+  94:	8a 95       	dec	r24
+  96:	f1 f7       	brne	.-4      	; 0x94 <Read_Bit+0x6>
+  98:	00 c0       	rjmp	.+0      	; 0x9a <Read_Bit+0xc>
+	_delay_us(1);
+	//Read bit on SDA line
+	uint8_t bit = !bit_is_clear(PINI2C,SDA);
+  9a:	86 b3       	in	r24, 0x16	; 22
+  9c:	86 95       	lsr	r24
+  9e:	81 70       	andi	r24, 0x01	; 1
+  a0:	92 e0       	ldi	r25, 0x02	; 2
+  a2:	9a 95       	dec	r25
+  a4:	f1 f7       	brne	.-4      	; 0xa2 <Read_Bit+0x14>
+  a6:	00 c0       	rjmp	.+0      	; 0xa8 <Read_Bit+0x1a>
+	_delay_us(1);
+	//wait until the SCL is low again to exit
+	while (PINB & (1 << SCL));
+  a8:	b0 99       	sbic	0x16, 0	; 22
+  aa:	fe cf       	rjmp	.-4      	; 0xa8 <Read_Bit+0x1a>
+	return bit;
+}
+  ac:	08 95       	ret
+
+000000ae <Read_Byte>:
+
+uint8_t Read_Byte()
+{	
+  ae:	0f 93       	push	r16
+  b0:	1f 93       	push	r17
+  b2:	cf 93       	push	r28
+	uint8_t byte = 0 ;
+	for (int i = 0 ; i< 8 ; i++)
+  b4:	00 e0       	ldi	r16, 0x00	; 0
+  b6:	10 e0       	ldi	r17, 0x00	; 0
+	return bit;
+}
+
+uint8_t Read_Byte()
+{	
+	uint8_t byte = 0 ;
+  b8:	80 e0       	ldi	r24, 0x00	; 0
+	for (int i = 0 ; i< 8 ; i++)
+  ba:	07 c0       	rjmp	.+14     	; 0xca <Read_Byte+0x1c>
+	{
+		//Right shift the byte then read the Masters MSB
+		byte <<= 1;
+  bc:	c8 2f       	mov	r28, r24
+  be:	cc 0f       	add	r28, r28
+		byte |= Read_Bit();
+  c0:	0e 94 47 00 	call	0x8e	; 0x8e <Read_Bit>
+  c4:	8c 2b       	or	r24, r28
+}
+
+uint8_t Read_Byte()
+{	
+	uint8_t byte = 0 ;
+	for (int i = 0 ; i< 8 ; i++)
+  c6:	0f 5f       	subi	r16, 0xFF	; 255
+  c8:	1f 4f       	sbci	r17, 0xFF	; 255
+  ca:	08 30       	cpi	r16, 0x08	; 8
+  cc:	11 05       	cpc	r17, r1
+  ce:	b4 f3       	brlt	.-20     	; 0xbc <Read_Byte+0xe>
+		//Right shift the byte then read the Masters MSB
+		byte <<= 1;
+		byte |= Read_Bit();
+	}
+	return byte;
+}
+  d0:	cf 91       	pop	r28
+  d2:	1f 91       	pop	r17
+  d4:	0f 91       	pop	r16
+  d6:	08 95       	ret
+
+000000d8 <Send_Ack>:
+
+void Send_Ack()
+{
+	//switch SDA from input to output and set it as low to set the line to 0
+	PORTI2C &= ~ (1<<SDA); DDRI2C |= (1<<SDA);
+  d8:	88 b3       	in	r24, 0x18	; 24
+  da:	8d 7f       	andi	r24, 0xFD	; 253
+  dc:	88 bb       	out	0x18, r24	; 24
+  de:	87 b3       	in	r24, 0x17	; 23
+  e0:	82 60       	ori	r24, 0x02	; 2
+  e2:	87 bb       	out	0x17, r24	; 23
+	//Wait while SCL is High
+	while (!(PINB & (1 << SCL)));
+  e4:	b0 9b       	sbis	0x16, 0	; 22
+  e6:	fe cf       	rjmp	.-4      	; 0xe4 <Send_Ack+0xc>
+  e8:	82 e0       	ldi	r24, 0x02	; 2
+  ea:	8a 95       	dec	r24
+  ec:	f1 f7       	brne	.-4      	; 0xea <Send_Ack+0x12>
+  ee:	00 c0       	rjmp	.+0      	; 0xf0 <Send_Ack+0x18>
+	_delay_us(1);
+	// Wait while it's low again to rest the SDA states
+	while (PINB & (1 << SCL));   
+  f0:	b0 99       	sbic	0x16, 0	; 22
+  f2:	fe cf       	rjmp	.-4      	; 0xf0 <Send_Ack+0x18>
+  f4:	82 e0       	ldi	r24, 0x02	; 2
+  f6:	8a 95       	dec	r24
+  f8:	f1 f7       	brne	.-4      	; 0xf6 <Send_Ack+0x1e>
+  fa:	00 c0       	rjmp	.+0      	; 0xfc <Send_Ack+0x24>
+	_delay_us(1);
+	 DDRI2C &= ~ (1<<SDA); PORTI2C |= (1<<SDA);
+  fc:	87 b3       	in	r24, 0x17	; 23
+  fe:	8d 7f       	andi	r24, 0xFD	; 253
+ 100:	87 bb       	out	0x17, r24	; 23
+ 102:	88 b3       	in	r24, 0x18	; 24
+ 104:	82 60       	ori	r24, 0x02	; 2
+ 106:	88 bb       	out	0x18, r24	; 24
+ 108:	08 95       	ret
+
+0000010a <main>:
+}
+
+int main()
+{
+	DDRC = 0xFF; PORTC = 0;
+ 10a:	8f ef       	ldi	r24, 0xFF	; 255
+ 10c:	84 bb       	out	0x14, r24	; 20
+ 10e:	15 ba       	out	0x15, r1	; 21
+	Slave_Initialization();
+ 110:	0e 94 36 00 	call	0x6c	; 0x6c <Slave_Initialization>
+	while(1)
+	{	
+		//Wait for start condition
+		if(Start_Condition())
+ 114:	0e 94 3d 00 	call	0x7a	; 0x7a <Start_Condition>
+ 118:	88 23       	and	r24, r24
+ 11a:	e1 f3       	breq	.-8      	; 0x114 <main+0xa>
+		{
+			uint8_t address = Read_Byte();
+ 11c:	0e 94 57 00 	call	0xae	; 0xae <Read_Byte>
+ 120:	c8 2f       	mov	r28, r24
+			Send_Ack();
+ 122:	0e 94 6c 00 	call	0xd8	; 0xd8 <Send_Ack>
+			//Check if addresses match to start the R/W operations
+			if((address >> 1) == MCU_ADDRESS)
+ 126:	8c 2f       	mov	r24, r28
+ 128:	86 95       	lsr	r24
+ 12a:	80 35       	cpi	r24, 0x50	; 80
+ 12c:	99 f7       	brne	.-26     	; 0x114 <main+0xa>
+			{
+				//Read data
+				if ((address & 1) == 0)
+ 12e:	c0 fd       	sbrc	r28, 0
+ 130:	f1 cf       	rjmp	.-30     	; 0x114 <main+0xa>
+				{
+					uint8_t data;
+					data = Read_Byte();
+ 132:	0e 94 57 00 	call	0xae	; 0xae <Read_Byte>
+ 136:	c8 2f       	mov	r28, r24
+					Send_Ack();
+ 138:	0e 94 6c 00 	call	0xd8	; 0xd8 <Send_Ack>
+					PORTC = data;
+ 13c:	c5 bb       	out	0x15, r28	; 21
+	#else
+		//round up by default
+		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
+	#endif
+
+	__builtin_avr_delay_cycles(__ticks_dc);
+ 13e:	8f e1       	ldi	r24, 0x1F	; 31
+ 140:	9e e4       	ldi	r25, 0x4E	; 78
+ 142:	01 97       	sbiw	r24, 0x01	; 1
+ 144:	f1 f7       	brne	.-4      	; 0x142 <main+0x38>
+ 146:	00 c0       	rjmp	.+0      	; 0x148 <main+0x3e>
+ 148:	00 00       	nop
+ 14a:	e4 cf       	rjmp	.-56     	; 0x114 <main+0xa>
+
+0000014c <_exit>:
+ 14c:	f8 94       	cli
+
+0000014e <__stop_program>:
+ 14e:	ff cf       	rjmp	.-2      	; 0x14e <__stop_program>

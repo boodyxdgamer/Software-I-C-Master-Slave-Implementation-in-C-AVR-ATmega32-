@@ -1,0 +1,319 @@
+
+GccApplication1.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         00000186  00000000  00000000  00000054  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .data         00000000  00800060  00800060  000001da  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  2 .comment      00000030  00000000  00000000  000001da  2**0
+                  CONTENTS, READONLY
+  3 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  0000020c  2**2
+                  CONTENTS, READONLY
+  4 .debug_aranges 00000070  00000000  00000000  00000248  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  5 .debug_info   000009da  00000000  00000000  000002b8  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_abbrev 00000658  00000000  00000000  00000c92  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_line   0000040e  00000000  00000000  000012ea  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_frame  000000d4  00000000  00000000  000016f8  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_str    000003ca  00000000  00000000  000017cc  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_loc    000002dd  00000000  00000000  00001b96  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_ranges 00000060  00000000  00000000  00001e73  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	0c 94 2a 00 	jmp	0x54	; 0x54 <__ctors_end>
+   4:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+   8:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+   c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  10:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  14:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  18:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  1c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  20:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  24:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  28:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  2c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  30:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  34:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  38:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  3c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  40:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  44:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  48:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  4c:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+  50:	0c 94 34 00 	jmp	0x68	; 0x68 <__bad_interrupt>
+
+00000054 <__ctors_end>:
+  54:	11 24       	eor	r1, r1
+  56:	1f be       	out	0x3f, r1	; 63
+  58:	cf e5       	ldi	r28, 0x5F	; 95
+  5a:	d8 e0       	ldi	r29, 0x08	; 8
+  5c:	de bf       	out	0x3e, r29	; 62
+  5e:	cd bf       	out	0x3d, r28	; 61
+  60:	0e 94 a6 00 	call	0x14c	; 0x14c <main>
+  64:	0c 94 c1 00 	jmp	0x182	; 0x182 <_exit>
+
+00000068 <__bad_interrupt>:
+  68:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+0000006c <SDA_High>:
+
+#define SDA PB1
+#define SCL PB0
+#define SLAVE_ADDRESS 0x50  // 7-bit I2C address
+
+void SDA_High(){PORTB  |=  (1<<SDA);}
+  6c:	88 b3       	in	r24, 0x18	; 24
+  6e:	82 60       	ori	r24, 0x02	; 2
+  70:	88 bb       	out	0x18, r24	; 24
+  72:	08 95       	ret
+
+00000074 <SCL_High>:
+void SCL_High(){PORTB  |=  (1<<SCL);}
+  74:	88 b3       	in	r24, 0x18	; 24
+  76:	81 60       	ori	r24, 0x01	; 1
+  78:	88 bb       	out	0x18, r24	; 24
+  7a:	08 95       	ret
+
+0000007c <SDA_Low>:
+void SDA_Low() { PORTB &= ~(1<<SDA);}
+  7c:	88 b3       	in	r24, 0x18	; 24
+  7e:	8d 7f       	andi	r24, 0xFD	; 253
+  80:	88 bb       	out	0x18, r24	; 24
+  82:	08 95       	ret
+
+00000084 <SCL_Low>:
+void SCL_Low() { PORTB &= ~(1<<SCL);}
+  84:	88 b3       	in	r24, 0x18	; 24
+  86:	8e 7f       	andi	r24, 0xFE	; 254
+  88:	88 bb       	out	0x18, r24	; 24
+  8a:	08 95       	ret
+
+0000008c <I2C_Initialization>:
+	
+
+void I2C_Initialization()
+{
+	//Setting SDA and SCL in master MCU to output and high for idle state
+	DDRB  |= (1<<SDA) |(1<<SCL);
+  8c:	87 b3       	in	r24, 0x17	; 23
+  8e:	83 60       	ori	r24, 0x03	; 3
+  90:	87 bb       	out	0x17, r24	; 23
+	PORTB |= (1<<SDA) |(1<<SCL);	
+  92:	88 b3       	in	r24, 0x18	; 24
+  94:	83 60       	ori	r24, 0x03	; 3
+  96:	88 bb       	out	0x18, r24	; 24
+  98:	08 95       	ret
+
+0000009a <I2C_Start>:
+
+void I2C_Start()
+{
+	//Pulling the SDA low while the SCL is high 
+	//to initiate communication and then Pulling the SCL low
+	SDA_Low();
+  9a:	0e 94 3e 00 	call	0x7c	; 0x7c <SDA_Low>
+	#else
+		//round up by default
+		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
+	#endif
+
+	__builtin_avr_delay_cycles(__ticks_dc);
+  9e:	8d e0       	ldi	r24, 0x0D	; 13
+  a0:	8a 95       	dec	r24
+  a2:	f1 f7       	brne	.-4      	; 0xa0 <I2C_Start+0x6>
+  a4:	00 00       	nop
+	_delay_us(5);
+	SCL_Low();
+  a6:	0e 94 42 00 	call	0x84	; 0x84 <SCL_Low>
+  aa:	08 95       	ret
+
+000000ac <I2C_Stop>:
+}
+
+void I2C_Stop()
+{
+	SCL_High();
+  ac:	0e 94 3a 00 	call	0x74	; 0x74 <SCL_High>
+  b0:	8d e0       	ldi	r24, 0x0D	; 13
+  b2:	8a 95       	dec	r24
+  b4:	f1 f7       	brne	.-4      	; 0xb2 <I2C_Stop+0x6>
+  b6:	00 00       	nop
+	_delay_us(5);
+	SDA_High();
+  b8:	0e 94 36 00 	call	0x6c	; 0x6c <SDA_High>
+  bc:	8d e0       	ldi	r24, 0x0D	; 13
+  be:	8a 95       	dec	r24
+  c0:	f1 f7       	brne	.-4      	; 0xbe <I2C_Stop+0x12>
+  c2:	00 00       	nop
+  c4:	08 95       	ret
+
+000000c6 <I2C_Send_Bit>:
+}
+
+void I2C_Send_Bit(uint8_t bit)
+{	
+	//writing the desired bit boolean value on the SDA 
+	if(bit)
+  c6:	88 23       	and	r24, r24
+  c8:	19 f0       	breq	.+6      	; 0xd0 <I2C_Send_Bit+0xa>
+	{
+		SDA_High();
+  ca:	0e 94 36 00 	call	0x6c	; 0x6c <SDA_High>
+  ce:	02 c0       	rjmp	.+4      	; 0xd4 <I2C_Send_Bit+0xe>
+	}
+	else
+	{
+		SDA_Low();
+  d0:	0e 94 3e 00 	call	0x7c	; 0x7c <SDA_Low>
+  d4:	82 e0       	ldi	r24, 0x02	; 2
+  d6:	8a 95       	dec	r24
+  d8:	f1 f7       	brne	.-4      	; 0xd6 <I2C_Send_Bit+0x10>
+  da:	00 c0       	rjmp	.+0      	; 0xdc <I2C_Send_Bit+0x16>
+	}
+	_delay_us(1);
+	//Releasing the SCL to high for some time so slave can read the bit on SDA
+	SCL_High();_delay_us(5);
+  dc:	0e 94 3a 00 	call	0x74	; 0x74 <SCL_High>
+  e0:	8d e0       	ldi	r24, 0x0D	; 13
+  e2:	8a 95       	dec	r24
+  e4:	f1 f7       	brne	.-4      	; 0xe2 <I2C_Send_Bit+0x1c>
+  e6:	00 00       	nop
+	//Pulling SCL back to low so another bit can be sent
+	SCL_Low(); _delay_us(1);
+  e8:	0e 94 42 00 	call	0x84	; 0x84 <SCL_Low>
+  ec:	82 e0       	ldi	r24, 0x02	; 2
+  ee:	8a 95       	dec	r24
+  f0:	f1 f7       	brne	.-4      	; 0xee <I2C_Send_Bit+0x28>
+  f2:	00 c0       	rjmp	.+0      	; 0xf4 <I2C_Send_Bit+0x2e>
+  f4:	08 95       	ret
+
+000000f6 <I2C_Send_byte>:
+}
+
+void I2C_Send_byte(uint8_t byte)
+{
+  f6:	1f 93       	push	r17
+  f8:	cf 93       	push	r28
+  fa:	df 93       	push	r29
+  fc:	18 2f       	mov	r17, r24
+	for (int i = 0 ;i<8;i++)
+  fe:	c0 e0       	ldi	r28, 0x00	; 0
+ 100:	d0 e0       	ldi	r29, 0x00	; 0
+ 102:	08 c0       	rjmp	.+16     	; 0x114 <I2C_Send_byte+0x1e>
+	{
+		//Sending the most significant bit as a boolean to be written on SDA
+		I2C_Send_Bit((byte & 0b10000000)!=0);
+ 104:	81 2f       	mov	r24, r17
+ 106:	88 1f       	adc	r24, r24
+ 108:	88 27       	eor	r24, r24
+ 10a:	88 1f       	adc	r24, r24
+ 10c:	0e 94 63 00 	call	0xc6	; 0xc6 <I2C_Send_Bit>
+		//Shifting the byte right to check for the next bit
+		byte <<=1;
+ 110:	11 0f       	add	r17, r17
+	SCL_Low(); _delay_us(1);
+}
+
+void I2C_Send_byte(uint8_t byte)
+{
+	for (int i = 0 ;i<8;i++)
+ 112:	21 96       	adiw	r28, 0x01	; 1
+ 114:	c8 30       	cpi	r28, 0x08	; 8
+ 116:	d1 05       	cpc	r29, r1
+ 118:	ac f3       	brlt	.-22     	; 0x104 <I2C_Send_byte+0xe>
+		//Sending the most significant bit as a boolean to be written on SDA
+		I2C_Send_Bit((byte & 0b10000000)!=0);
+		//Shifting the byte right to check for the next bit
+		byte <<=1;
+	}
+}
+ 11a:	df 91       	pop	r29
+ 11c:	cf 91       	pop	r28
+ 11e:	1f 91       	pop	r17
+ 120:	08 95       	ret
+
+00000122 <I2C_Read_Ack>:
+
+void I2C_Read_Ack()
+{
+	//Setting SDA as input pulled up to read the ack
+	DDRB &= ~(1<<SDA); SDA_High(); _delay_us(1);
+ 122:	87 b3       	in	r24, 0x17	; 23
+ 124:	8d 7f       	andi	r24, 0xFD	; 253
+ 126:	87 bb       	out	0x17, r24	; 23
+ 128:	0e 94 36 00 	call	0x6c	; 0x6c <SDA_High>
+ 12c:	82 e0       	ldi	r24, 0x02	; 2
+ 12e:	8a 95       	dec	r24
+ 130:	f1 f7       	brne	.-4      	; 0x12e <I2C_Read_Ack+0xc>
+ 132:	00 c0       	rjmp	.+0      	; 0x134 <I2C_Read_Ack+0x12>
+	SCL_High(); _delay_us(5);/* code to read ack*/ SCL_Low();
+ 134:	0e 94 3a 00 	call	0x74	; 0x74 <SCL_High>
+ 138:	8d e0       	ldi	r24, 0x0D	; 13
+ 13a:	8a 95       	dec	r24
+ 13c:	f1 f7       	brne	.-4      	; 0x13a <I2C_Read_Ack+0x18>
+ 13e:	00 00       	nop
+ 140:	0e 94 42 00 	call	0x84	; 0x84 <SCL_Low>
+	DDRB |= (1<<SDA);
+ 144:	87 b3       	in	r24, 0x17	; 23
+ 146:	82 60       	ori	r24, 0x02	; 2
+ 148:	87 bb       	out	0x17, r24	; 23
+ 14a:	08 95       	ret
+
+0000014c <main>:
+}
+
+int main(void)
+{
+	DDRC = 0; PORTC = 0xFF;
+ 14c:	14 ba       	out	0x14, r1	; 20
+ 14e:	8f ef       	ldi	r24, 0xFF	; 255
+ 150:	85 bb       	out	0x15, r24	; 21
+	I2C_Initialization();
+ 152:	0e 94 46 00 	call	0x8c	; 0x8c <I2C_Initialization>
+	while(1)
+	{
+		I2C_Start();
+ 156:	0e 94 4d 00 	call	0x9a	; 0x9a <I2C_Start>
+		I2C_Send_byte(SLAVE_ADDRESS << 1);
+ 15a:	80 ea       	ldi	r24, 0xA0	; 160
+ 15c:	0e 94 7b 00 	call	0xf6	; 0xf6 <I2C_Send_byte>
+		I2C_Read_Ack();
+ 160:	0e 94 91 00 	call	0x122	; 0x122 <I2C_Read_Ack>
+		I2C_Send_byte(~PINC);
+ 164:	83 b3       	in	r24, 0x13	; 19
+ 166:	80 95       	com	r24
+ 168:	0e 94 7b 00 	call	0xf6	; 0xf6 <I2C_Send_byte>
+		I2C_Read_Ack();
+ 16c:	0e 94 91 00 	call	0x122	; 0x122 <I2C_Read_Ack>
+		I2C_Stop();
+ 170:	0e 94 56 00 	call	0xac	; 0xac <I2C_Stop>
+	#else
+		//round up by default
+		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
+	#endif
+
+	__builtin_avr_delay_cycles(__ticks_dc);
+ 174:	8f e1       	ldi	r24, 0x1F	; 31
+ 176:	9e e4       	ldi	r25, 0x4E	; 78
+ 178:	01 97       	sbiw	r24, 0x01	; 1
+ 17a:	f1 f7       	brne	.-4      	; 0x178 <main+0x2c>
+ 17c:	00 c0       	rjmp	.+0      	; 0x17e <main+0x32>
+ 17e:	00 00       	nop
+ 180:	ea cf       	rjmp	.-44     	; 0x156 <main+0xa>
+
+00000182 <_exit>:
+ 182:	f8 94       	cli
+
+00000184 <__stop_program>:
+ 184:	ff cf       	rjmp	.-2      	; 0x184 <__stop_program>

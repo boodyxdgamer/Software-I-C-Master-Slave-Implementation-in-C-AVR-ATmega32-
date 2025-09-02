@@ -1,0 +1,62 @@
+Software I²C Communication Flow (Master ↔ Slave)
+
+🔧 Initialization
+- Master:
+  - Sets SDA and SCL as output and drives them HIGH
+    → Pull-up resistors simulate idle bus state
+- Slave:
+  - Sets SDA and SCL as input with internal pull-up
+    → Ready to detect start condition
+
+🚦 Start Condition
+- Master pulls SDA LOW
+  → Delay
+  → Then pulls SCL LOW
+    → Signals start of transmission
+
+📤 Sending a Byte (Master Side)
+- For each bit:
+  → Set SDA to bit value (1 or 0) using bit masking
+  → Delay
+  → Set SCL HIGH
+  → Longer delay (ensures slave reads bit)
+  → Set SCL LOW
+- Repeat 8 times for full byte
+
+📥 Receiving a Byte (Slave Side)
+- Wait for SDA LOW while SCL HIGH
+  → Detects start condition
+- Enter read loop:
+  → For each bit:
+    → Wait for SCL to go HIGH
+    → Read SDA state and store bit
+    → Wait for SCL to go LOW
+- After 8 bits, compare with slave address
+
+✅ Acknowledgment (ACK/NACK)
+- If address matches:
+  → Slave switches SDA to output, pulls it LOW
+  → Delay
+  → Switches back to input with pull-up
+- Master:
+  → Switches SDA to input
+  → Reads ACK bit
+  → If ACK received → Sends data byte
+  → If NACK → Aborts or retries
+
+🔄 Data Byte Transmission
+- Same bit-wise transmission as address
+- Slave receives and stores byte
+  → Returns to main loop for action
+
+🛑 Stop Condition
+- Master:
+  → Sets SCL HIGH
+  → Delay
+  → Sets SDA HIGH
+    → Signals end of transmission
+- Slave:
+  → Detects SDA HIGH while SCL HIGH
+    → Recognizes STOP
+    → Executes preset block of code
+    → Waits for next start condition (SDA LOW while SCL HIGH)
