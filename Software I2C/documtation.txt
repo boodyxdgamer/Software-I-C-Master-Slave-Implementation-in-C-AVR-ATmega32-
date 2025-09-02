@@ -60,3 +60,12 @@ Software I²C Communication Flow (Master ↔ Slave)
     → Recognizes STOP
     → Executes preset block of code
     → Waits for next start condition (SDA LOW while SCL HIGH)
+//////////////////////////////////////////////////////////////////////////////////////////////
+This project showcases a complete software-based I²C implementation in C for AVR microcontrollers, specifically ATmega32. Unlike most resources online, it includes both master and slave logic, built entirely from scratch without relying on hardware I²C modules. The protocol is emulated using GPIO manipulation, precise timing delays, and interrupt-free synchronization.
+Key features:
+•	Full I²C protocol: Start/Stop conditions, ACK/NACK, byte-level transmission
+•	Master and slave roles implemented in pure C
+•	GPIO-based bit-banging for SDA and SCL control
+•	Proteus simulation setup for validation
+•	Designed for educational clarity and low-level protocol understanding
+
